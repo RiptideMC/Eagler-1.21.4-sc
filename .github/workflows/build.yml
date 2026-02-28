@@ -14,13 +14,22 @@ jobs:
 
       - name: Compile Eaglercraft
         run: |
-          find . -name "*.sh" -exec chmod +x {} +
+          # 1. Find and enter the folder containing CompileEPK.sh
+          EPK_DIR=$(find . -name "CompileEPK.sh" -printf '%h' -quit)
+          cd "$EPK_DIR"
+          chmod +x *.sh
           ./CompileEPK.sh
-          cd target_teavm_wasm_gc
+          
+          # 2. Automatically find the WASM folder and enter it
+          WASM_DIR=$(find . -name "MakeWASMClientBundle.sh" -printf '%h' -quit)
+          cd "$WASM_DIR"
+          chmod +x *.sh
           ./MakeWASMClientBundle.sh
 
       - name: Upload Result
         uses: actions/upload-artifact@v4
         with:
           name: Eaglercraft-WASM-Client
-          path: target_teavm_wasm_gc/javascript_dist/
+          # This grabs the output from wherever it was generated
+          path: "**/javascript_dist/"
+
