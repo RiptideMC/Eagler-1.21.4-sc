@@ -1,0 +1,27 @@
+name: Build Eaglercraft WASM-GC
+on: [workflow_dispatch] # Allows you to start it manually
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Compile Eaglercraft
+        run: |
+          chmod +x CompileEPK.sh
+          ./CompileEPK.sh
+          cd target_teavm_wasm_gc
+          chmod +x MakeWASMClientBundle.sh
+          ./MakeWASMClientBundle.sh
+
+      - name: Upload Result
+        uses: actions/upload-artifact@v4
+        with:
+          name: Eaglercraft-WASM-Client
+          path: target_teavm_wasm_gc/javascript_dist/
