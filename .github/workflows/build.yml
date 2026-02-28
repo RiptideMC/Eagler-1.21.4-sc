@@ -1,4 +1,4 @@
-name: Build Eaglercraft 1.21.4 (Auto-Build)
+name: Build Eaglercraft 1.21.4 WASM
 on: [workflow_dispatch]
 
 jobs:
@@ -13,18 +13,15 @@ jobs:
           java-version: '21'
           distribution: 'temurin'
 
-      - name: Find and Build
+      - name: Build Eaglercraft 1.21
         run: |
           chmod +x gradlew
-          # This lists all tasks so we can see the right one in the logs
-          ./gradlew tasks
-          
-          # We will try the 3 most common 1.21 build commands:
-          ./gradlew build --no-daemon || ./gradlew assemble --no-daemon || ./gradlew webBuild --no-daemon
+          # We are using the 'build' command the logs recommended
+          ./gradlew build --no-daemon
 
       - name: Upload Result
         uses: actions/upload-artifact@v4
         with:
           name: Eaglercraft-1.21-Client
-          # This grabs anything in a 'dist' or 'build' folder
-          path: "**/build/**"
+          # This grabs the output from the standard Gradle build folder
+          path: "**/build/libs/"
