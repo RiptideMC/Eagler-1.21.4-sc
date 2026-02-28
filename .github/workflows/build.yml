@@ -1,5 +1,5 @@
 name: Build Eaglercraft WASM-GC
-on: [workflow_dispatch] # Allows you to start it manually
+on: [workflow_dispatch]
 
 jobs:
   build:
@@ -14,10 +14,9 @@ jobs:
 
       - name: Compile Eaglercraft
         run: |
-          chmod +x CompileEPK.sh
+          find . -name "*.sh" -exec chmod +x {} +
           ./CompileEPK.sh
           cd target_teavm_wasm_gc
-          chmod +x MakeWASMClientBundle.sh
           ./MakeWASMClientBundle.sh
 
       - name: Upload Result
